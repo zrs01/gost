@@ -41,10 +41,6 @@ func ParseNode(s string) (node Node, err error) {
 		return Node{}, ErrInvalidNode
 	}
 
-	// encrypt password process (password should be encompassed by "{}")
-	// pwdIdx1 := strings.index(s, "{")
-	// pwdIdx2 := strings.index(s, "}")
-
 	if !strings.Contains(s, "://") {
 		s = "auto://" + s
 	}
