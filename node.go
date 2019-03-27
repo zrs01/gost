@@ -41,6 +41,10 @@ func ParseNode(s string) (node Node, err error) {
 		return Node{}, ErrInvalidNode
 	}
 
+	// encrypt password process (password should be encompassed by "{}")
+	// pwdIdx1 := strings.index(s, "{")
+	// pwdIdx2 := strings.index(s, "}")
+
 	if !strings.Contains(s, "://") {
 		s = "auto://" + s
 	}
@@ -57,6 +61,17 @@ func ParseNode(s string) (node Node, err error) {
 		User:   u.User,
 		marker: &failMarker{},
 		url:    u,
+	}
+
+	// decrypt password if it starts with 'enc:'
+	pwd, pwdSet := u.User.Password()
+	if pwdSet {
+		if strings.HasPrefix(pwd, "enc:") {
+			pwdText := simpleDecrypt(pwd[4:len(pwd)])
+			node.User = url.UserPassword(u.User.Username(), pwdText)
+		} else {
+			fmt.Println("Warning: Highly recommend replace the plain password with 'enc:" + simpleEncrypt(pwd) + "'")
+		}
 	}
 
 	u.RawQuery = ""
