@@ -66,7 +66,8 @@ func ParseNode(s string) (node Node, err error) {
 			pwdText := simpleDecrypt(pwd[4:len(pwd)])
 			node.User = url.UserPassword(u.User.Username(), pwdText)
 		} else {
-			fmt.Println("Warning: Highly recommend replace the plain password with 'enc:" + simpleEncrypt(pwd) + "'")
+			fmt.Printf("Warning: For login %s, highly recommend replace the plain password with 'enc:%s'\n",
+				u.User.Username(), simpleEncrypt(pwd))
 		}
 	}
 
