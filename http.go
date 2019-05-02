@@ -60,8 +60,12 @@ func (c *httpConnector) Connect(conn net.Conn, addr string, options ...ConnectOp
 	if user != nil {
 		u := user.Username()
 		p, _ := user.Password()
+		a, err := url.QueryUnescape(u + ":" + p)
+		if err != nil {
+			return nil, err
+		}
 		req.Header.Set("Proxy-Authorization",
-			"Basic "+base64.StdEncoding.EncodeToString([]byte(u+":"+p)))
+			"Basic "+base64.StdEncoding.EncodeToString([]byte(a)))
 	}
 
 	if err := req.Write(conn); err != nil {
@@ -382,6 +386,10 @@ func (h *httpHandler) forwardRequest(conn net.Conn, req *http.Request, route *Ch
 		s := lastNode.User.String()
 		if _, set := lastNode.User.Password(); !set {
 			s += ":"
+		}
+		s, err = url.QueryUnescape(s)
+		if err != nil {
+			return err
 		}
 		req.Header.Set("Proxy-Authorization",
 			"Basic "+base64.StdEncoding.EncodeToString([]byte(s)))

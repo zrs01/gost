@@ -67,8 +67,12 @@ func (c *http2Connector) Connect(conn net.Conn, addr string, options ...ConnectO
 	if user != nil {
 		u := user.Username()
 		p, _ := user.Password()
+		a, err := url.QueryUnescape(u + ":" + p)
+		if err != nil {
+			return nil, err
+		}
 		req.Header.Set("Proxy-Authorization",
-			"Basic "+base64.StdEncoding.EncodeToString([]byte(u+":"+p)))
+			"Basic "+base64.StdEncoding.EncodeToString([]byte(a)))
 	}
 	if Debug {
 		dump, _ := httputil.DumpRequest(req, false)

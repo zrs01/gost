@@ -42,7 +42,11 @@ func (hpd *httpProxyDialer) Dial(network string, addr string) (net.Conn, error) 
 	if user := hpd.proxyURL.User; user != nil {
 		proxyUser := user.Username()
 		if proxyPassword, passwordSet := user.Password(); passwordSet {
-			credential := base64.StdEncoding.EncodeToString([]byte(proxyUser + ":" + proxyPassword))
+			a, err = url.QueryUnescape(proxyUser + ":" + proxyPassword)
+			if err != nil {
+				return nil, err
+			}
+			credential := base64.StdEncoding.EncodeToString([]byte(a))
 			connectHeader.Set("Proxy-Authorization", "Basic "+credential)
 		}
 	}
