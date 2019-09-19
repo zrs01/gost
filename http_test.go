@@ -30,6 +30,7 @@ var httpProxyTests = []struct {
 	{url.UserPassword("", "123456"), []*url.Userinfo{url.UserPassword("", "123456")}, ""},
 	{url.UserPassword("admin", "123456"), []*url.Userinfo{url.UserPassword("admin", "123456")}, ""},
 	{url.UserPassword("admin", "123456"), []*url.Userinfo{url.UserPassword("user", "pass"), url.UserPassword("admin", "123456")}, ""},
+	{url.UserPassword("admin%40company.com", "1%3A%23%3F%406"), []*url.Userinfo{url.UserPassword("admin@company.com", "1:#?@6")}, ""},
 }
 
 func httpProxyRoundtrip(targetURL string, data []byte, clientInfo *url.Userinfo, serverInfo []*url.Userinfo) error {

@@ -38,3 +38,5 @@ require (
 	gopkg.in/xtaci/kcp-go.v4 v4.3.2
 	gopkg.in/xtaci/smux.v1 v1.0.7
 )
+
+go 1.13
